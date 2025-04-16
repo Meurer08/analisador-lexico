@@ -67,11 +67,13 @@ public class CompiladoresTR1 {
     }
 
     private static void findTokens(TipoToken type, Matcher matcher, List<Token> tokens) {
-        if (matcher.find()) {
+        while (matcher.find()) {
             String value = matcher.group();
-
-            if (type != TipoToken.WHITESPACE && tokens.stream().noneMatch(token -> token.type == type && Objects.equals(token.value, value))) {
-
+    
+            // Só adiciona se não for espaço e ainda não estiver na lista
+            if (type != TipoToken.WHITESPACE &&
+                tokens.stream().noneMatch(token -> token.type == type && Objects.equals(token.value, value))) {
+    
                 tokens.add(new Token(type, value));
             }
         }
@@ -130,7 +132,14 @@ public class CompiladoresTR1 {
                 textoLimpo = textoLimpo.replace("__LITERAL_" + token.value + "__", "<" + token.value + ",>");
             }
         }
-        System.out.println(textoLimpo);
 
+        //textoLimpo = textoLimpo.replaceAll(">([^<]+)",  " ");
+
+        Pattern pattern = Pattern.compile("<<?[^<>]+>>?");
+        Matcher matcher = pattern.matcher(textoLimpo);
+
+        while (matcher.find()) {
+            System.out.printf(matcher.group());
+        }
     }
 }
