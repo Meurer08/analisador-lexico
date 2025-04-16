@@ -115,21 +115,22 @@ public class CompiladoresTR1 {
                 .filter(s -> !s.matches(TipoToken.COMENTARIO.pattern.toString()) && !s.isBlank())
                 .collect(Collectors.joining());
 
-        for (Token token: tokens) {
-            String saidaToken = "<";
-
-            if (token.entrada == 0) {
-                saidaToken += token.value;
-                saidaToken += ",";
-            } else {
-                saidaToken += token.type.nome;
-                saidaToken += ",";
-                saidaToken += token.entrada;
+        for (Token token : tokens) {
+            if (token.entrada != 0) {
+                textoLimpo = textoLimpo.replaceAll(Pattern.quote(token.value), "__TOKEN_" + token.entrada + "__");
+                } else {
+                    textoLimpo = textoLimpo.replaceAll(Pattern.quote(token.value), "__LITERAL_" + token.value + "__");
+                }
             }
-
-            saidaToken += "> ";
-
-            System.out.println(saidaToken);
+                
+        for (Token token : tokens) {
+            if (token.entrada != 0) {
+                textoLimpo = textoLimpo.replace("__TOKEN_" + token.entrada + "__", "<" + token.type.nome + "," + token.entrada + ">");
+            } else {
+                textoLimpo = textoLimpo.replace("__LITERAL_" + token.value + "__", "<" + token.value + ",>");
+            }
         }
+        System.out.println(textoLimpo);
+
     }
 }
